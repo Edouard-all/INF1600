@@ -13,7 +13,7 @@
 .data 
 
 inputCrt: 
-    .asciz "images/image.png"
+    .asciz "images/cerro-torre-at-sunrise.png"
 
 outputCrt:
     .asciz "crt.png"
@@ -33,9 +33,15 @@ main:
     #################### Filtre CRT #######################
 
     # TODO: Charger l'image inputCrt en appelant loadImage()
+    
+    subl $12, %esp      // allocation de l'espace en pile pour l'image
+    pushl %esp          // empiler cet espace en paramètre
+    pushl $inputCrt     // empiler l'adresse de l'image
+    call loadImage      // appel de fonction
+    addl $8, %esp       // libérer la pile des param`tres
 
     # TODO: Appliquer le filtre crtFilter() sur cette image
-
+    
     # TODO: Sauvegarder cette image dans le fichier outputCrt avec saveImage()
 
     # TODO: Libérer la mémoire de vos images avec freeImage()

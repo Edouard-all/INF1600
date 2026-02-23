@@ -21,7 +21,37 @@ applyScanline:
     movl    %esp, %ebp                  
 
     # TODO
-   
+    pushl %ebx
+    pushl %edi
+    pushl %esi
+
+    movl 8(%ebp), %edi   
+    # placer l'adresse du pixel dans edi
+    movl 12(%ebp), %ebx  
+    # placer le pourcentage d'assombrissement dans ebx
+
+    movl $3, %ecx
+    iteration:
+    movl $0, %eax
+    movb -1(%edi, %ecx, 1), %al     
+    # Déplacer l'octet d'une couleur du pixel dans al
+    mull %ebx
+    movl $0, %edx
+    movl $100, %esi
+    divl %esi                       
+    # multiplication de l'octet d'une couleur du pixel par le facteur d'assombrissement
+    movb %al, -1(%edi, %ecx, 1)    
+    # Replacer la nouvelle valeur de couleur
+    loop iteration
+
+
+
+
+
+    popl %esi
+    popl %edi
+    popl %ebx
+
     # epilogue
     leave 
     ret   

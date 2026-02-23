@@ -34,7 +34,68 @@ applyPhosphor:
     movl    %esp, %ebp                  
 
     # TODO
+    pushl %ebx
+    pushl %edi
+    pushl %esi
 
+    # placer l'adresse du pixel dans edi
+    movl 8(%ebp), %edi   
+    # placer le facteur de subpixel
+    movl 12(%ebp), %ebx   
+
+    # 2 couleurs à modifier dans tous les cas
+    movl $2, %ecx
+    comparaison:
+    cmpl $0, %ebx
+    je rouge
+    cmpl $1, %ebx
+    je vert
+    jmp bleu
+
+    rouge:
+    movl $0, %eax
+    # Déplacer l'octet d'une couleur du pixel dans al
+    movb (%edi, %ecx, 1), %al
+    mull factor
+    movl $0, %edx
+    # multiplication de l'octet d'une couleur du pixel par le facteur d'assombrissement
+    divl percent_conversion
+    # Replacer la nouvelle valeur de couleur                  
+    movb %al, (%edi, %ecx, 1)
+    loop rouge
+    jmp fin
+
+    vert:
+    movl $0, %eax
+    # Déplacer l'octet d'une couleur du pixel dans al
+    movb -2(%edi, %ecx, 2), %al
+    mull factor
+    movl $0, %edx
+    # multiplication de l'octet d'une couleur du pixel par le facteur d'assombrissement
+    divl percent_conversion
+    # Replacer la nouvelle valeur de couleur                  
+    movb %al, -2(%edi, %ecx, 2)
+    loop vert
+    jmp fin    
+
+    bleu:
+    movl $0, %eax
+    # Déplacer l'octet d'une couleur du pixel dans al
+    movb -1(%edi, %ecx, 1), %al
+    mull factor
+    movl $0, %edx
+    # multiplication de l'octet d'une couleur du pixel par le facteur d'assombrissement
+    divl percent_conversion
+    # Replacer la nouvelle valeur de couleur                  
+    movb %al, -1(%edi, %ecx, 1)
+    loop bleu
+    jmp fin
+
+    fin:
+
+    popl %esi
+    popl %edi
+    popl %ebx
     # epilogue
     leave 
     ret   

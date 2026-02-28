@@ -112,7 +112,6 @@ crtFilter:
 
     incrementation_largeur:
     # Note : tester dec si tout fonctionne
-    subl $4, %ebx
     subl $1, -8(%ebp)
     cmpl $0, -8(%ebp)
     jne iteration_largeur

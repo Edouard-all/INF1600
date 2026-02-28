@@ -35,8 +35,8 @@ crtFilter:
     movl    %esp, %ebp                  
 
     # TODO
-    # Réserver 3 variables locales
-    addl $8, %esp
+    # Réserver 2 variables locales
+    subl $8, %esp
     pushl %ebx
     pushl %edi
     pushl %esi
@@ -56,7 +56,7 @@ crtFilter:
     # Placer la largeur de l'image dans la deuxième variable locale
     movl (%eax), %edi
     movl %edi, -8(%ebp)
-    # Placer l'indice de la ligne de pointeurs courante
+    # Placer l'indice de la ligne de pointeurs courante dans edx
     pushl %eax
     movl -4(%ebp), %eax
     movl -4(%ecx, %eax, 4), %edx
@@ -64,34 +64,37 @@ crtFilter:
     
     iteration_largeur:
     # Placer le pointeur du pixel courant dans esi
-    pushl %eax
-    movl -8(%ebp), %eax
-    movl -4(%edx, %eax, 4), %esi
-    popl %eax
+    movl %edx, %esi
 
     verification_Scanline:
-    cmpl %ebx, -4(%ebp)
+    pushl %eax
+    pushl %edx
+    movl $0, %edx
+    movl -4(%ebp), %eax
+    divl %ebx
+    cmpl $0, %edx
     jne appel_Phosphor
 
     appel_Scanline:
     # Appel de scanline
-    pushl %eax
-    pushl %edx
+    //pushl %eax
+    //pushl %edx
     pushl %ecx
-    pushl less_color
+    pushl (less_color)
     pushl %esi
     call applyScanline
     addl $8, %esp
     popl %ecx
-    popl %edx
-    popl %eax
+    //popl %edx
+    //popl %eax
 
     appel_Phosphor:
     # Calcul du subpixel
-    pushl %eax
-    pushl %edx
+    //pushl %eax
+    //pushl %edx
+    movl $0, %edx
     movl -8(%ebp), %eax
-    divl max_index
+    divl (max_index)
     movl %edx, %edi
     popl %edx
     popl %eax
@@ -109,6 +112,7 @@ crtFilter:
 
     incrementation_largeur:
     # Note : tester dec si tout fonctionne
+    subl $4, %ebx
     subl $1, -8(%ebp)
     cmpl $0, -8(%ebp)
     jne iteration_largeur
@@ -125,7 +129,8 @@ crtFilter:
     popl %edi
     popl %ebx
     # Libérer les variables locales
-    movl %ebp, %esp
+    // addl $8, %esp
+    // movl %ebp, %esp
     # epilogue
     leave 
     ret 

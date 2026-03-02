@@ -54,39 +54,39 @@ applyPhosphor:
 
     rouge:
     movl $0, %eax
-    # Déplacer l'octet d'une couleur du pixel dans al
+    # déplacer l'octet d'une couleur du pixel dans al
     movb (%edi, %ecx, 1), %al
     mull factor
     movl $0, %edx
     # multiplication de l'octet d'une couleur du pixel par le facteur d'assombrissement
     divl percent_conversion
-    # Replacer la nouvelle valeur de couleur                  
+    # replacer la nouvelle valeur de couleur                  
     movb %al, (%edi, %ecx, 1)
     loop rouge
     jmp fin
 
     vert:
     movl $0, %eax
-    # Déplacer l'octet d'une couleur du pixel dans al
+    # déplacer l'octet d'une couleur du pixel dans al
     movb -2(%edi, %ecx, 2), %al
     mull factor
     movl $0, %edx
     # multiplication de l'octet d'une couleur du pixel par le facteur d'assombrissement
     divl percent_conversion
-    # Replacer la nouvelle valeur de couleur                  
+    # replacer la nouvelle valeur de couleur                  
     movb %al, -2(%edi, %ecx, 2)
     loop vert
     jmp fin    
 
     bleu:
     movl $0, %eax
-    # Déplacer l'octet d'une couleur du pixel dans al
+    # déplacer l'octet d'une couleur du pixel dans al
     movb -1(%edi, %ecx, 1), %al
     mull factor
     movl $0, %edx
     # multiplication de l'octet d'une couleur du pixel par le facteur d'assombrissement
     divl percent_conversion
-    # Replacer la nouvelle valeur de couleur                  
+    # replacer la nouvelle valeur de couleur                  
     movb %al, -1(%edi, %ecx, 1)
     loop bleu
     jmp fin

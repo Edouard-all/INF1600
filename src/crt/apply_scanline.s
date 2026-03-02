@@ -33,13 +33,13 @@ applyScanline:
     movl $3, %ecx
     iteration:
     movl $0, %eax
-    # Déplacer l'octet d'une couleur du pixel dans al
+    # déplacer l'octet d'une couleur du pixel dans al
     movb -1(%edi, %ecx, 1), %al     
     mull %ebx
     movl $0, %edx
     # multiplication de l'octet d'une couleur du pixel par le facteur d'assombrissement
     divl percent_conversion
-    # Replacer la nouvelle valeur de couleur                  
+    # replacer la nouvelle valeur de couleur                  
     movb %al, -1(%edi, %ecx, 1)    
     loop iteration
 

@@ -60,7 +60,7 @@ sierpinskiImage:
     # Cas de base
     cmpl $1, %edi
     # accéder au pixel
-    movl (%eax, %ecx, 4), %edx
+    movl 8(%eax, %ecx, 4), %edx
     movl (%edx, %ebx, 4), %esi
     # colorer le pixel
     movl 24(%ebp), %esi

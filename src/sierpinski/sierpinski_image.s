@@ -38,16 +38,16 @@ sierpinskiImage:
 
     # réserver 2 variables locales
     subl $8, %esp
-    # préserver les registres caller-save
+    # préserver les registres callee-save
     pushl %ebx
     pushl %edi
     pushl %esi
 
-    # mettre l'image dans eax
+    # mettre l'image dans eax 
     movl 20(%ebp), %eax
 
     # mettre la taille dans edi
-    movl 12(%ebp), %edi
+    movl 16(%ebp), %edi
     # vérifier les bornes, retour si une des coordonnées est supérieure ou égale à la dimension de l'image correspondante
     # mettre x, y dans ebx, ecx
     movl 8(%ebp), %ebx
@@ -59,14 +59,22 @@ sierpinskiImage:
 
     # Cas de base
     cmpl $1, %edi
+    jne traiterTaille
     # accéder au pixel
-    movl 8(%eax, %ecx, 4), %edx
-    movl (%edx, %ebx, 4), %esi
+    #met le tableau de pointeurs dans edx
+    movl 8(%eax), %edx
+    #met le pointeur ver un pixel dans edi
+    movl (%edx, %ecx,4), %edi
+    #met le pixel dans esi
+    movl (%edi, %ebx, 4), %esi
     # colorer le pixel
     movl 24(%ebp), %esi
+    #remet le pixel en memoire
+    movl %esi, (%edi, %ebx, 4)
     jmp retour
 
     # traiter la taille
+    traiterTaille:
     pushl %eax
     pushl %edx
     movl $0, %edx

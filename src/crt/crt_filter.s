@@ -56,7 +56,7 @@ crtFilter:
     # Placer la largeur de l'image dans la deuxième variable locale
     movl (%eax), %edi
     movl %edi, -8(%ebp)
-    # Placer l'indice de la ligne de pointeurs courante dans edx
+    # Placer l'adresse du tableau de pixels courant dans edx
     pushl %eax
     movl -4(%ebp), %eax
     movl -4(%ecx, %eax, 4), %edx
@@ -64,13 +64,15 @@ crtFilter:
     
     iteration_largeur:
     # Placer le pointeur du pixel courant dans esi
-    movl %edx, %esi
+    movl -8(%ebp), %edi
+    leal -4(%edx,%edi,4), %esi
 
     verification_Scanline:
     pushl %eax
     pushl %edx
     movl $0, %edx
     movl -4(%ebp), %eax
+    subl $1, %eax
     divl %ebx
     cmpl $0, %edx
     jne appel_Phosphor
@@ -94,6 +96,7 @@ crtFilter:
     //pushl %edx
     movl $0, %edx
     movl -8(%ebp), %eax
+    subl $1, %eax
     divl (max_index)
     movl %edx, %edi
     popl %edx
